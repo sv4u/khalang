@@ -5,29 +5,35 @@ This is a Lisp like language which uses various phrases and works that are said 
 
 ## Implementation Plan
 
-* Step 1: Implement language in Python
-* Step 2: Translate implementation to C
-* Step 2.5: Learn how to write a language in SML or OCaml
-* Step 3: Translate C implementation to SML/OCaml
+* [ ] Step 1: Implement language in Python
+* [ ] Step 2: Translate implementation to C
+* [ ] Step 2.5: Learn how to write a language in SML or OCaml
+* [ ] Step 3: Translate C implementation to SML/OCaml
 
 
 ### Step 1
 
-Plan of attack:
+*This step is to help me develop the language to its fullest form*
 
-* Write a simple REPL - **DONE**
-* Write basic functions for normal Lisp - **DONE**
-* Translate those basic functions to Khaled Script
-* Add compiling options to REPL
+* [x] Write a simple REPL
+* [x] Write basic functions for normal Lisp
+* [ ] Translate those basic functions to Khaled Script
+* [ ] Add compiling options to REPL
 
 ### Step 2
+
+*This step is to help me make the language quick and more optimized*
 
 I haven't gotten here yet.
 
 ### Step 2.5
 
+*This step is to help me learn more about functional languages and how to implement other languages in them*
+
 I haven't gotten here yet.
 
 ### Step 3
+
+*This is the ultimate goal*
 
 I haven't gotten here yet.
