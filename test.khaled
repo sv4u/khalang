@@ -1,0 +1,7 @@
+(+ 1 2)
+(* 2 2)
+(cons 1 nil)
+(cons 1 (cons 2 (cons 3 nil)))
+((lambda (x) (+ 1 x)) 4)
+(define mult (x y) (* x y))
+(mult 3 3)
