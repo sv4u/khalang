@@ -1,0 +1,21 @@
+Khalang - The DJ Khaled Lisp Language
+
+Types:
+SML Type | Khalang Type
+int | int
+bool | bool
+string | string
+float | Real
+list | list
+
+Defining a value:
+(king <name> <value>)
+
+Function definitions:
+(bless <name> <args> <function>)
+
+Lambda functions:
+(major <args> <function>)
+
+To Do:
+- Figure out the value of a function
