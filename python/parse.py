@@ -25,8 +25,8 @@ def Sym(s):
 
 _quote = Sym('quote')
 _if = Sym('if')
-_set = Sym('set!')
-_define = Sym('define')
+_set = Sym('switchup')
+_define = Sym('bless')
 _lambda = Sym('lambda')
 _begin = Sym('begin')
 _definemacro = Sym('define-macro')

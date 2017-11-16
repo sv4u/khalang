@@ -75,8 +75,8 @@ global_env = standard_env()
 
 _quote = Sym('quote')
 _if = Sym('if')
-_set = Sym('set!')
-_define = Sym('define')
+_set = Sym('switchup')
+_define = Sym('bless')
 _lambda = Sym('lambda')
 _begin = Sym('begin')
 _definemacro = Sym('define-macro')
@@ -90,7 +90,7 @@ _struct = Sym('struct')
 
 # Make predicates and functions of a user defined struct
 def make_functions(name, param, env=global_env):
-	create = 'make-' + name
+	create = 'bless-' + name
 	check = name + '?'
 	index_array = []
 	key_array = []
@@ -144,7 +144,7 @@ def eval(x, env=global_env):
 		make_functions(name, params, env)
 	else: # procedure call
 		proc = eval(x[0], env)
-		if ( isinstance(x[0], str) and x[0].startswith('make-')):
+		if ( isinstance(x[0], str) and x[0].startswith('bless-')):
 			args = [eval(arg, env) for arg in x[2:]]
 			if len(args) != proc: 
 				print('TypeError: ' + x[0] + ' requires %d values, given %d' % (proc,  len(args)))
