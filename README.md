@@ -17,7 +17,7 @@ This is a Lisp like language which uses various phrases and works that are said 
 
 * [x] Write a simple REPL
 * [x] Write basic functions for normal Lisp
-* [ ] Translate those basic functions to Khaled Script
+* [x] Translate those basic functions to Khaled Script
 * [ ] Add compiling options to REPL
 
 ### Step 2
