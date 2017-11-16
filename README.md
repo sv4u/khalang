@@ -3,14 +3,31 @@
 
 This is a Lisp like language which uses various phrases and works that are said by the immaculate DJ Khaled.
 
-## Example Code
+## Implementation Plan
 
-Function that sums everything in an int list:
-```
-(bless {sum} {X} {(if (equal? (length X) 0) 0 (+ (head X) (sum (tail X))))})
-```
+* Step 1: Implement language in Python
+* Step 2: Translate implementation to C
+* Step 2.5: Learn how to write a language in SML or OCaml
+* Step 3: Translate C implementation to SML/OCaml
 
-The SML code that mirrors this is
-```SML
-fun sum X = if X = [] then 0 else (hd X) + sum (tl X)
-```
+
+### Step 1
+
+Plan of attack:
+
+* Write a simple REPL
+* Write basic functions for normal Lisp
+* Translate those basic functions to Khaled Script
+* Add compiling options to REPL
+
+### Step 2
+
+I haven't gotten here yet.
+
+### Step 2.5
+
+I haven't gotten here yet.
+
+### Step 3
+
+I haven't gotten here yet.
