@@ -35,7 +35,7 @@ _unquote = Sym('unquote')
 _unquotesplicing = Sym('unquote-splicing')
 _checkexpect = Sym('check-expect')
 _checkwithin = Sym('check-within')
-_ismember = Sym('is-member')
+_member = Sym('member?')
 _struct = Sym('struct')
 
 # Tokenizer
