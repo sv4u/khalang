@@ -15,8 +15,8 @@ This is a Lisp like language which uses various phrases and works that are said 
 
 Plan of attack:
 
-* Write a simple REPL
-* Write basic functions for normal Lisp
+* Write a simple REPL - **DONE**
+* Write basic functions for normal Lisp - **DONE**
 * Translate those basic functions to Khaled Script
 * Add compiling options to REPL
 
