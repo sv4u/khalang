@@ -22,18 +22,20 @@ sayings = ["#blessup", "The key is to make it.", "Baby, you smart! You loyal! Yo
 
 # REPL
 def repl(prompt='lion:>>> '):
-	print("Khanlang\n")
-	print(random.choice(sayings) + "\n")
+	print("Khanlang")
+	print(random.choice(sayings))
 	while True:
 		inpt = raw_input(prompt)
 		try:
-			if inpt == "quit": break
+			if inpt == "played-myself":
+				print(random.choice(sayings) + "\n")
+				break
 			val = eval(parse(inpt))
 			if val is not None: 
 				print(khanify(val))
 		except Exception as e:
 			print '%s: %s' % (type(e).__name__, e)
-		print(random.choice(sayings) + "\n")
+		print(random.choice(sayings))
 
 # Convert Python object back into a Khanlang string
 def khanify(exp):
