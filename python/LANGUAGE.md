@@ -53,4 +53,4 @@ Lion: 4
 
 ## REPL Usage
 
-To quit, just type `quit`
+To quit, just type `played-myself`
