@@ -871,7 +871,7 @@ int main(int argc, char** argv) {
   Sexpr   = mpc_new("sexpr");
   Qexpr   = mpc_new("qexpr");
   Expr    = mpc_new("expr");
-  Khaled    = mpc_new("khaled");
+  Khaled  = mpc_new("khaled");
 
   mpca_lang(MPCA_LANG_DEFAULT,
     "                                              \
@@ -883,7 +883,7 @@ int main(int argc, char** argv) {
       qexpr   : '{' <expr>* '}' ;                  \
       expr    : <number>  | <symbol> | <string>    \
               | <comment> | <sexpr>  | <qexpr>;    \
-      khaled    : /^/ <expr>* /$/ ;                  \
+      khaled  : /^/ <expr>* /$/ ;                  \
     ",
     Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Khaled);
 
