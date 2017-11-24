@@ -1,0 +1,5 @@
+;;; Core Khalang Library
+
+(bless {nil} {})
+(bless {true} 1)
+(bless {false} 0)
