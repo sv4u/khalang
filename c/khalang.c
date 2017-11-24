@@ -37,7 +37,7 @@ struct lenv;
 typedef struct lval lval;
 typedef struct lenv lenv;
 
-/* Lisp Value */
+/* Khalang Value */
 
 enum { LVAL_ERR, LVAL_NUM,   LVAL_SYM, LVAL_STR,
        LVAL_FUN, LVAL_SEXPR, LVAL_QEXPR };
@@ -262,7 +262,7 @@ void lval_print(lval* v) {
       if (v->builtin) {
         printf("<builtin>");
       } else {
-        printf("(\\ ");
+        printf("(lambda ");
         lval_print(v->formals);
         putchar(' ');
         lval_print(v->body);
@@ -420,9 +420,9 @@ void lenv_def(lenv* e, lval* k, lval* v) {
 lval* lval_eval(lenv* e, lval* v);
 
 lval* builtin_lambda(lenv* e, lval* a) {
-  LASSERT_NUM("\\", a, 2);
-  LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
-  LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
+  LASSERT_NUM("lambda", a, 2);
+  LASSERT_TYPE("lambda", a, 0, LVAL_QEXPR);
+  LASSERT_TYPE("lambda", a, 1, LVAL_QEXPR);
 
   for (int i = 0; i < a->cell[0]->count; i++) {
     LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
@@ -890,6 +890,13 @@ int main(int argc, char** argv) {
   lenv* e = lenv_new();
   lenv_add_builtins(e);
 
+	/* Load core library */
+
+	lval* core = lval_add(lval_sexpr(), lval_str("core.khaled"));
+	lval* x = builtin_load(e, core);
+	if (x->type == LVAL_ERR) { lval_println(x); }
+	lval_del(x);
+
   /* Interactive Prompt */
   if (argc == 1) {
 
@@ -900,6 +907,8 @@ int main(int argc, char** argv) {
 
       char* input = readline("lion:>>> ");
       add_history(input);
+
+			if (strcmp(input, "played-myself") == 0) break;
 
       mpc_result_t r;
       if (mpc_parse("<stdin>", input, Khaled, &r)) {
