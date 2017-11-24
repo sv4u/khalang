@@ -17,3 +17,8 @@
 (def {uncurry} pack)
 
 (fun {do & l} {if (== l nil) {nil} {last l}})
+
+;;; Logical Definitions
+(fun {not x} {- 1 x})
+(fun {and x y} {* x y})
+(fun {or x y} {+ x y})
