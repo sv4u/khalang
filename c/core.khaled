@@ -6,15 +6,12 @@
 (bless {false} 0)
 
 ;;; Function Definitions
-(bless {fun} (lambda {f b} {def (head f) (lambda (tail f) b)}))
+(bless {fun} (lambda {f b} {bless (head f) (lambda (tail f) b)}))
 
 (fun {let b} {((lambda {_} b) ())})
 
 (fun {unpack f l} {eval (join (list f) l)})
 (fun {pack f & xs} {f xs})
-
-(def {curry} unpack)
-(def {uncurry} pack)
 
 (fun {do & l} {if (== l nil) {nil} {last l}})
 
@@ -73,7 +70,7 @@
   }
 )
 
-(def {otherwise} true)
+(bless {otherwise} true)
 
 ;;; Misc Definitions
 (fun {flip f a b} {f b a})
