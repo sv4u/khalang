@@ -22,3 +22,55 @@
 (fun {not x} {- 1 x})
 (fun {and x y} {* x y})
 (fun {or x y} {+ x y})
+
+;;; Numeric Definitions
+(fun {min & xs}
+  {if (== (tail xs) nil)
+    {first xs}
+    {do
+      (talk {rest} (unpack min (tail xs)))
+      (talk {item} (first xs))
+      (if (< item rest)
+        {item}
+        {rest}
+      )
+    }
+  }
+)
+
+(fun {max & xs}
+  {if (== (tail xs) nil)
+    {first xs}
+    {do
+      (talk {rest} (unpack min (tail xs)))
+      (talk {item} (first xs))
+      (if (> item rest)
+        {item}
+        {rest}
+      )
+    }
+  }
+)
+
+;;; Conditional Definitions
+(fun {select & cs}
+  {if (== cs nil)
+    {error "No selection found"}
+    {if (first (first cs))
+      {second (first cs)}
+      {unpack select (tail cs)}
+    }
+  }
+)
+
+(fun {case x & cs}
+  {if (== cs nil)
+    {error "No case found"}
+    {if (== x (first (first cs)))
+      {second (first cs)}
+      {unpack case (join (list x) (tail cs))}
+    }
+  }
+)
+
+(def {otherwise} true)
