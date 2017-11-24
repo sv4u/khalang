@@ -1,4 +1,4 @@
-# The Khanlang Language
+# The Khalang Language
 
 *version 0.1?*
 
