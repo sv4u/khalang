@@ -74,3 +74,153 @@
 )
 
 (def {otherwise} true)
+
+;;; Misc Definitions
+(fun {flip f a b} {f b a})
+(fun {ghost & xs} {eval xs})
+(fun {comp f g x} {f (g x)})
+
+;;; List Operations
+(fun {first l} {eval (head l)})
+(fun {second l} {eval (head (tail l))})
+(fun {third l} {eval (head (tail (tail l)))})
+
+(fun {length l}
+  {if (== l nil)
+    {0}
+    {+ 1 (length (tail l))}
+  }
+)
+
+(fun {nth n l}
+  {if (== n 0)
+    {first l}
+    {nth (- n 1) (tail l)}
+  }
+)
+
+(fun {last l} {(nth (- (length l) 1) l)})
+
+(fun {map f l}
+  {if (== l nil)
+    {nil}
+    {join (list (f (first l))) (map f (tail l))}
+  }
+)
+
+(fun {filter f l}
+  {if (== l nil)
+    {nil}
+    {join
+      (if (f (first l))
+        {head l}
+        {nil})
+      (filter f (tail l))}
+  }
+)
+
+(fun {init l}
+  {if (== (tail l) nil)
+    {nil}
+    {join (head l) (init (tail l))}
+  }
+)
+
+(fun {reverse l}
+  {if (== (tail l) nil)
+    {nil}
+    {join (reverse (tail l)) (head l)}
+  }
+)
+
+(fun {foldl f z l}
+  {if (== l nil)
+    {z}
+    {foldl f (f z (first l)) (tail l)}
+  }
+)
+
+(fun {foldr f z l}
+  {if (== l nil)
+    {z}
+    {f (first l) (foldr f z (tail l))}
+  }
+)
+
+; (fun {sum n} {foldl + 0 n})
+; (fun {prod n} {foldl * 1 n})
+
+(fun {take n l}
+  {if (== n 0)
+    {nil}
+    {join (head l) (take (- n 1) (tail l))}
+  }
+)
+
+(fun {take-while f l}
+  {if (not (unpack f (head l)))
+    {nil}
+    {join (head l) (take-while f (tail l))}
+  }
+)
+
+(fun {drop n l}
+  {if (== n 0)
+    {l}
+    {drop (- n 1) (tail l)}
+  }
+)
+
+(fun {drop-while f l}
+  {if (not (unpack f (head l)))
+    {l}
+    {drop-while f (tail l)}
+  }
+)
+
+(fun {split n l} {list (take n l) (drop n l)})
+
+(fun {elem x l}
+  {if (== l nil)
+    {false}
+    {if (== x (first l))
+      {true}
+      {elem x (tail l)}
+    }
+  }
+)
+
+(fun {lookup x l}
+  {if (== l nil)
+    {error "No element found"}
+    {do
+      (talk {key} (first (first l)))
+      (talk {val} (second (first l)))
+      (if (== key x)
+        {val}
+        {lookup x (tail l)}
+      )
+    }
+  }
+)
+
+(fun {zip x y}
+  {if (or (== x nil) (== y nil))
+    {nil}
+    {join
+      (list (join (head x) (head y)))
+      (zip (tail x) (tail y))
+    }
+  }
+)
+
+(fun {unzip l}
+  {if (== l nil)
+    {(nil nil)}
+    {do
+      (talk {x} (first l))
+      (talk {xs} (unzip (tail l)))
+      (list (join (head x) (first xs)) (join (tail x) (second xs)))
+    }
+  }
+)
