@@ -414,9 +414,9 @@ void lenv_def(lenv* e, lval* k, lval* v) {
 lval* lval_eval(lenv* e, lval* v);
 
 lval* builtin_lambda(lenv* e, lval* a) {
-  LASSERT_NUM("\\", a, 2);
-  LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
-  LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
+  LASSERT_NUM("lambda", a, 2);
+  LASSERT_TYPE("lambda", a, 0, LVAL_QEXPR);
+  LASSERT_TYPE("lambda", a, 1, LVAL_QEXPR);
 
   for (int i = 0; i < a->cell[0]->count; i++) {
     LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
@@ -536,16 +536,16 @@ lval* builtin_var(lenv* e, lval* a, char* func) {
     func, syms->count, a->count-1);
 
   for (int i = 0; i < syms->count; i++) {
-    if (strcmp(func, "def") == 0) { lenv_def(e, syms->cell[i], a->cell[i+1]); }
-    if (strcmp(func, "=")   == 0) { lenv_put(e, syms->cell[i], a->cell[i+1]); }
+    if (strcmp(func, "bless") == 0) { lenv_def(e, syms->cell[i], a->cell[i+1]); }
+    if (strcmp(func, "talk")   == 0) { lenv_put(e, syms->cell[i], a->cell[i+1]); }
   }
 
   lval_del(a);
   return lval_sexpr();
 }
 
-lval* builtin_def(lenv* e, lval* a) { return builtin_var(e, a, "def"); }
-lval* builtin_put(lenv* e, lval* a) { return builtin_var(e, a, "="); }
+lval* builtin_def(lenv* e, lval* a) { return builtin_var(e, a, "talk"); }
+lval* builtin_put(lenv* e, lval* a) { return builtin_var(e, a, "put"); }
 
 lval* builtin_ord(lenv* e, lval* a, char* op) {
   LASSERT_NUM(op, a, 2);
@@ -677,9 +677,9 @@ void lenv_add_builtin(lenv* e, char* name, lbuiltin func) {
 
 void lenv_add_builtins(lenv* e) {
   /* Variable Functions */
-  lenv_add_builtin(e, "\\",  builtin_lambda);
-  lenv_add_builtin(e, "def", builtin_def);
-  lenv_add_builtin(e, "=",   builtin_put);
+  lenv_add_builtin(e, "lambda",  builtin_lambda);
+  lenv_add_builtin(e, "bless", builtin_def);
+  lenv_add_builtin(e, "talk",   builtin_put);
 
   /* List Functions */
   lenv_add_builtin(e, "list", builtin_list);
