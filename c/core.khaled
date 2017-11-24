@@ -1,232 +1,236 @@
-;;; Core Khalang Library
-
-;;; Atomics
-(bless {nil} {})
-(bless {true} 1)
+;;; Atoms
+(bless {nil}   {})
+(bless {true}  1)
 (bless {false} 0)
 
 ;;; Function Definitions
-(bless {fun} (lambda {f b} {bless (head f) (lambda (tail f) b)}))
+(bless {fun} (lambda {f b} {
+  bless (head f) (lambda (tail f) b)
+}))
 
-(fun {let b} {((lambda {_} b) ())})
+;;; Example function definition
+(fun {let b} {
+  ((lambda {_} b) ())
+})
 
-(fun {unpack f l} {eval (join (list f) l)})
+;;; Unpack list to function
+(fun {unpack f l} {
+  eval (join (list f) l)
+})
+
+;;; Unapply list to function
 (fun {pack f & xs} {f xs})
 
-(fun {do & l} {if (== l nil) {nil} {last l}})
+;;; Curriend and Uncurried function calling
+(bless {curry} unpack)
+(bless {uncurry} pack)
 
-;;; Logical Definitions
-(fun {not x} {- 1 x})
+
+;;; Perform several operations in a sequence (sml let)
+(fun {do & l} {
+  if (== l nil)
+    {nil}
+    {last l}
+})
+
+;;; Logical Functions
+(fun {not x}   {- 1 x})
+(fun {or x y}  {+ x y})
 (fun {and x y} {* x y})
-(fun {or x y} {+ x y})
 
-;;; Numeric Definitions
-(fun {min & xs}
-  {if (== (tail xs) nil)
-    {first xs}
-    {do
+;;; Minimum of arguments
+(fun {min & xs} {
+  if (== (tail xs) nil) {first xs} {
+    do
       (talk {rest} (unpack min (tail xs)))
       (talk {item} (first xs))
-      (if (< item rest)
-        {item}
-        {rest}
-      )
-    }
+      (if (< item rest) {item} {rest})
   }
-)
+})
 
-(fun {max & xs}
-  {if (== (tail xs) nil)
-    {first xs}
-    {do
-      (talk {rest} (unpack min (tail xs)))
+;;; Maximum of arguments
+(fun {max & xs} {
+  if (== (tail xs) nil) {first xs} {
+    do
+      (talk {rest} (unpack max (tail xs)))
       (talk {item} (first xs))
-      (if (> item rest)
-        {item}
-        {rest}
-      )
-    }
+      (if (> item rest) {item} {rest})
   }
-)
+})
 
-;;; Conditional Definitions
-(fun {select & cs}
-  {if (== cs nil)
+;;; Conditional functions
+(fun {select & cs} {
+  if (== cs nil)
     {error "No selection found"}
     {if (first (first cs))
       {second (first cs)}
       {unpack select (tail cs)}
     }
-  }
-)
+})
 
-(fun {case x & cs}
-  {if (== cs nil)
+(fun {case & cs} {
+  if (== cs nil)
     {error "No case found"}
     {if (== x (first (first cs)))
       {second (first cs)}
       {unpack case (join (list x) (tail cs))}
     }
-  }
-)
+})
 
 (bless {otherwise} true)
 
-;;; Misc Definitions
+;;; Misc
+
 (fun {flip f a b} {f b a})
 (fun {ghost & xs} {eval xs})
 (fun {comp f g x} {f (g x)})
 
-;;; List Operations
-(fun {first l} {eval (head l)})
-(fun {second l} {eval (head (tail l))})
-(fun {third l} {eval (head (tail (tail l)))})
 
-(fun {length l}
-  {if (== l nil)
+;;; List access function
+
+(fun {first xs}  {eval (head xs)})
+(fun {second xs} {eval (head (tail xs))})
+(fun {third xs}  {eval (head (tail (tail xs)))})
+(fun {nth n xs} {
+  if (== n 0)
+    {first xs}
+    {nth (- n 1) (tail xs)}
+  })
+(fun {last xs} {nth (- (length xs) 1) xs})
+
+;;; List Length
+
+(fun {length xs} {
+  if (== xs nil)
     {0}
-    {+ 1 (length (tail l))}
-  }
-)
+    {(+ 1 (length (tail xs)))}
+  })
 
-(fun {nth n l}
-  {if (== n 0)
-    {first l}
-    {nth (- n 1) (tail l)}
-  }
-)
+;;; Map
 
-(fun {last l} {(nth (- (length l) 1) l)})
-
-(fun {map f l}
-  {if (== l nil)
+(fun {map f xs} {
+  if (== xs nil)
     {nil}
-    {join (list (f (first l))) (map f (tail l))}
-  }
-)
+    {join (list (f (first xs))) (map f (tail xs))}
+  })
 
-(fun {filter f l}
-  {if (== l nil)
+;;; Filter
+
+(fun {filter f xs} {
+  if (== xs nil)
     {nil}
-    {join
-      (if (f (first l))
-        {head l}
-        {nil})
-      (filter f (tail l))}
-  }
-)
+    {join (if (f (first xs)) {head l} {nil}) (filter f (tail xs))}
+  })
 
-(fun {init l}
-  {if (== (tail l) nil)
+;;; Return all but last element
+
+(fun {init xs} {
+  if (== (tail l) nil)
     {nil}
-    {join (head l) (init (tail l))}
-  }
-)
+    {join (head xs) (init (tail xs))}
+  })
 
-(fun {reverse l}
-  {if (== (tail l) nil)
+;;; Reverse
+
+(fun {reverse xs} {
+  if (== xs nil)
     {nil}
-    {join (reverse (tail l)) (head l)}
-  }
-)
+    {join (reverse (tail xs)) (head xs)}
+  })
 
-(fun {foldl f z l}
-  {if (== l nil)
+;;; Fold left
+
+(fun {foldl f z xs} {
+  if (== xs nil)
     {z}
-    {foldl f (f z (first l)) (tail l)}
-  }
-)
+    {foldl f (f z (first xs)) (tail xs)}
+  })
 
-(fun {foldr f z l}
-  {if (== l nil)
+;;; Fold right
+
+(fun {foldr f z xs} {
+  if (== xs nil)
     {z}
-    {f (first l) (foldr f z (tail l))}
-  }
-)
+    {f (first xs) (foldr f z (tail xs))}
+  })
 
-; (fun {sum n} {foldl + 0 n})
-; (fun {prod n} {foldl * 1 n})
+;;; Sum and Product
 
-(fun {take n l}
-  {if (== n 0)
+(fun {sum xs}     {foldl + 0 xs})
+(fun {product xs} {foldl * 1 xs})
+
+;;; Take n elements
+
+(fun {take n xs} {
+  if (== n 0)
     {nil}
-    {join (head l) (take (- n 1) (tail l))}
-  }
-)
+    {join (head xs) (take (- n 1) (tail xs))}
+  })
 
-(fun {take-while f l}
-  {if (not (unpack f (head l)))
+;;; Drop n elements
+
+(fun {drop n xs} {
+  if (== n 0)
+    {xs}
+    {join (- n 1) (tail xs)}
+  })
+
+;;; Split at index n
+
+(fun {split n xs} {list (take n xs) (drop n xs)})
+
+;;; Take while p
+
+(fun {take-while p xs} {
+  if (not (unpack p (head xs)))
     {nil}
-    {join (head l) (take-while f (tail l))}
-  }
-)
+    {join (head xs) (take-while p (tail xs))}
+  })
 
-(fun {drop n l}
-  {if (== n 0)
-    {l}
-    {drop (- n 1) (tail l)}
-  }
-)
+;;; Drop while p
 
-(fun {drop-while f l}
-  {if (not (unpack f (head l)))
-    {l}
-    {drop-while f (tail l)}
-  }
-)
+(fun {drop-while p xs} {
+  if (not (unpack p (head xs)))
+    {xs}
+    {drop-while p (tail xs)}
+  })
 
-(fun {split n l} {list (take n l) (drop n l)})
+;;; Is element
 
-(fun {elem x l}
-  {if (== l nil)
+(fun {is-elem x xs} {
+  if (== xs nil)
     {false}
-    {if (== x (first l))
-      {true}
-      {elem x (tail l)}
-    }
-  }
-)
+    {if (== x (first xs)) {true} {is-elem x (tail xs)}}
+  })
 
-(fun {lookup x l}
-  {if (== l nil)
+;;; Find element in list of pairs
+
+(fun {lookup x xs} {
+  if (== xs nil)
     {error "No element found"}
     {do
-      (talk {key} (first (first l)))
-      (talk {val} (second (first l)))
-      (if (== key x)
-        {val}
-        {lookup x (tail l)}
-      )
+      {talk {key} {first (first xs)}}
+      {talk {val} {second (first xs)}}
+      (if (== x key) {val} {lookup x (tail xs)})
     }
-  }
-)
+  })
 
-(fun {zip x y}
-  {if (or (== x nil) (== y nil))
+;;; Zip
+
+(fun {zip x y} {
+  if (or (== x nil) (== y nil))
     {nil}
-    {join
-      (list (join (head x) (head y)))
-      (zip (tail x) (tail y))
-    }
-  }
-)
+    {join (list (join (head x) (head y))) (zip (tail x) (tail y))}
+  })
 
-(fun {unzip l}
-  {if (== l nil)
-    {(nil nil)}
+;;; Unzip
+
+(fun {unzip xs} {
+  if (== xs nil)
+    {{nil nil}}
     {do
-      (talk {x} (first l))
-      (talk {xs} (unzip (tail l)))
-      (list (join (head x) (first xs)) (join (tail x) (second xs)))
+      (talk {x} (first xs))
+      (talk {y} (unzip (tail xs)))
+      (list (join (head x) (first y)) (join (tail x) (second y)))
     }
-  }
-)
-
-;;; Testing
-(fun {fib n}
-  {select
-    {(== n 0) 0}
-    {(== n 1) 1}
-    {otherwise (+ (fib (- n 1)) (fib (- n 2)))}
-  }
-)
+  })

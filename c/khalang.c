@@ -1,5 +1,7 @@
 #include "mpc.h"
 
+#ifdef _WIN32
+
 static char buffer[2048];
 
 char* readline(char* prompt) {
@@ -12,6 +14,10 @@ char* readline(char* prompt) {
 }
 
 void add_history(char* unused) {}
+
+#else
+#include <editline/readline.h>
+#endif
 
 /* Parser Declariations */
 
@@ -414,9 +420,9 @@ void lenv_def(lenv* e, lval* k, lval* v) {
 lval* lval_eval(lenv* e, lval* v);
 
 lval* builtin_lambda(lenv* e, lval* a) {
-  LASSERT_NUM("lambda", a, 2);
-  LASSERT_TYPE("lambda", a, 0, LVAL_QEXPR);
-  LASSERT_TYPE("lambda", a, 1, LVAL_QEXPR);
+  LASSERT_NUM("\\", a, 2);
+  LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
+  LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
 
   for (int i = 0; i < a->cell[0]->count; i++) {
     LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
@@ -544,8 +550,8 @@ lval* builtin_var(lenv* e, lval* a, char* func) {
   return lval_sexpr();
 }
 
-lval* builtin_def(lenv* e, lval* a) { return builtin_var(e, a, "talk"); }
-lval* builtin_put(lenv* e, lval* a) { return builtin_var(e, a, "put"); }
+lval* builtin_def(lenv* e, lval* a) { return builtin_var(e, a, "bless"); }
+lval* builtin_put(lenv* e, lval* a) { return builtin_var(e, a, "talk"); }
 
 lval* builtin_ord(lenv* e, lval* a, char* op) {
   LASSERT_NUM(op, a, 2);
@@ -865,7 +871,7 @@ int main(int argc, char** argv) {
   Sexpr   = mpc_new("sexpr");
   Qexpr   = mpc_new("qexpr");
   Expr    = mpc_new("expr");
-  Khaled   = mpc_new("khaled");
+  Khaled    = mpc_new("khaled");
 
   mpca_lang(MPCA_LANG_DEFAULT,
     "                                              \
@@ -877,7 +883,7 @@ int main(int argc, char** argv) {
       qexpr   : '{' <expr>* '}' ;                  \
       expr    : <number>  | <symbol> | <string>    \
               | <comment> | <sexpr>  | <qexpr>;    \
-      khaled   : /^/ <expr>* /$/ ;                  \
+      khaled    : /^/ <expr>* /$/ ;                  \
     ",
     Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Khaled);
 
